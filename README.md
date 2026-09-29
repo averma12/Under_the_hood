@@ -14,6 +14,7 @@
 > - **Project 7:** matched comparisons of SwiGLU vs GELU, RMSNorm vs LayerNorm, and RoPE vs learned positions.
 > - **Project 8:** an mHC + flash-attention experiment trained for 30k steps ([write-up](projects/08_flash-attention-and-tiled-kernels/EXPERIMENT_MHC_FLASH.md)), [FlashAttention explained from the GPU up](projects/08_flash-attention-and-tiled-kernels/FLASH_ATTENTION_EXPLAINED.md), and KV-cache / Flash-Decoding generation for my GPT.
 > - **Project 9:** real-web pretraining. My GPT (51M params) trained on 1B tokens of FineWeb-Edu with a sharded memmap pipeline, gradient accumulation, validation bits-per-byte, an LR sweep, and a repeated-data BREAK IT ([notes](projects/09_pretraining-on-the-real-web/NOTES.md)).
+> - **Project 10:** a data audit of that same corpus: MinHash/LSH dedup (0.55% near duplicates), 13-gram contamination (1.8% of my validation docs were copies; MMLU 0.16% strong leaks), and a controlled decontaminated retrain showing my Chapter 9 validation bpb was inflated by only ~0.002 ([notes](projects/10_data-curation-and-contamination/NOTES.md)).
 >
 > Look for the sections I added to each project's README. They are written as "we trained / we measured" results, with figures. Every result comes from a single seed on small models. Treat them as learning notes, not as benchmarks.
 >

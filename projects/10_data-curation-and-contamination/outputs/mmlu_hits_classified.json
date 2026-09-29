@@ -1,0 +1,1247 @@
+{
+  "summary": {
+    "mmlu_items": 14042,
+    "items_with_13gram_hits": 146,
+    "quoted_passage_items": 51,
+    "question_in_doc": 65,
+    "strong_leaks": 23,
+    "strong_leak_subjects": [
+      [
+        "astronomy",
+        5
+      ],
+      [
+        "high_school_geography",
+        4
+      ],
+      [
+        "high_school_psychology",
+        4
+      ],
+      [
+        "high_school_statistics",
+        4
+      ],
+      [
+        "high_school_macroeconomics",
+        2
+      ],
+      [
+        "high_school_physics",
+        2
+      ],
+      [
+        "machine_learning",
+        1
+      ],
+      [
+        "elementary_mathematics",
+        1
+      ]
+    ],
+    "hit_subjects": [
+      [
+        "high_school_us_history",
+        25
+      ],
+      [
+        "high_school_geography",
+        19
+      ],
+      [
+        "high_school_world_history",
+        16
+      ],
+      [
+        "high_school_psychology",
+        11
+      ],
+      [
+        "high_school_macroeconomics",
+        11
+      ],
+      [
+        "high_school_european_history",
+        10
+      ],
+      [
+        "professional_law",
+        9
+      ],
+      [
+        "high_school_statistics",
+        7
+      ]
+    ]
+  },
+  "rows": [
+    {
+      "item": 1925,
+      "subject": "electrical_engineering",
+      "matched_fraction": 0.4,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 1999,
+      "subject": "electrical_engineering",
+      "matched_fraction": 0.294,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5903,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.021,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5786,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.224,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3828,
+      "subject": "high_school_government_and_politics",
+      "matched_fraction": 0.071,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5857,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.658,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5663,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.316,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 13261,
+      "subject": "security_studies",
+      "matched_fraction": 0.063,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5681,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.028,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5761,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.54,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 7502,
+      "subject": "miscellaneous",
+      "matched_fraction": 0.718,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 10707,
+      "subject": "professional_law",
+      "matched_fraction": 0.008,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3667,
+      "subject": "high_school_government_and_politics",
+      "matched_fraction": 0.091,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5650,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.511,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3405,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.24,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 11662,
+      "subject": "professional_law",
+      "matched_fraction": 0.019,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": true
+    },
+    {
+      "item": 5874,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.086,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5872,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.336,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5668,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.019,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5649,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.046,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5657,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.372,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3323,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.196,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5678,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.369,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5719,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.378,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5950,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.306,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5720,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.198,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5917,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.04,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 11989,
+      "subject": "professional_law",
+      "matched_fraction": 0.004,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5880,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.174,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5760,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.813,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3357,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.4,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5914,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.204,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 7119,
+      "subject": "marketing",
+      "matched_fraction": 0.221,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": true
+    },
+    {
+      "item": 5680,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.532,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3289,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.089,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5860,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.225,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 6033,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.023,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5707,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.013,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5702,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.231,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 12208,
+      "subject": "professional_medicine",
+      "matched_fraction": 0.006,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 12268,
+      "subject": "professional_medicine",
+      "matched_fraction": 0.007,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 6694,
+      "subject": "logical_fallacies",
+      "matched_fraction": 0.069,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5683,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.615,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5399,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.125,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 1259,
+      "subject": "college_medicine",
+      "matched_fraction": 0.042,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": true
+    },
+    {
+      "item": 11297,
+      "subject": "professional_law",
+      "matched_fraction": 0.011,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": true
+    },
+    {
+      "item": 3283,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.184,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5998,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.151,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5754,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.019,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5790,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.028,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5768,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.698,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5968,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.663,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3453,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.444,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3454,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.467,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3460,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.167,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3493,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.167,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3512,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.143,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3555,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.6,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3559,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.522,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3572,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.158,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3605,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.3,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3618,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.333,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3632,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.429,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 12016,
+      "subject": "professional_law",
+      "matched_fraction": 0.085,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": true
+    },
+    {
+      "item": 13314,
+      "subject": "security_studies",
+      "matched_fraction": 0.03,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3995,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.129,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4004,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.692,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4020,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.2,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4041,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.111,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4113,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.242,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3292,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.052,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 11686,
+      "subject": "professional_law",
+      "matched_fraction": 0.056,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 9893,
+      "subject": "philosophy",
+      "matched_fraction": 0.267,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5807,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.673,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4889,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.526,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4966,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.013,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5054,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.688,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5104,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.306,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5123,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.609,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5186,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.037,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5241,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.029,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5360,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.491,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 1132,
+      "subject": "college_mathematics",
+      "matched_fraction": 0.095,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5967,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.147,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 6516,
+      "subject": "international_law",
+      "matched_fraction": 0.018,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3314,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.003,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 10585,
+      "subject": "professional_accounting",
+      "matched_fraction": 0.038,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 254,
+      "subject": "astronomy",
+      "matched_fraction": 0.5,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": true
+    },
+    {
+      "item": 306,
+      "subject": "astronomy",
+      "matched_fraction": 0.268,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5981,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.461,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3306,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.894,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 11136,
+      "subject": "professional_law",
+      "matched_fraction": 0.003,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5346,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.438,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 2616,
+      "subject": "global_facts",
+      "matched_fraction": 0.278,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 10469,
+      "subject": "professional_accounting",
+      "matched_fraction": 0.148,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3447,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.077,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3458,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.63,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3470,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.577,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3508,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.2,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3564,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.385,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3569,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.286,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3580,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.042,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3623,
+      "subject": "high_school_geography",
+      "matched_fraction": 0.05,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3840,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.149,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3889,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.04,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3894,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.214,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4030,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.571,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4036,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.469,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4216,
+      "subject": "high_school_macroeconomics",
+      "matched_fraction": 0.02,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3226,
+      "subject": "high_school_computer_science",
+      "matched_fraction": 0.273,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5929,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.092,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 6838,
+      "subject": "machine_learning",
+      "matched_fraction": 0.852,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 7564,
+      "subject": "miscellaneous",
+      "matched_fraction": 0.319,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5753,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.335,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5448,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.394,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5470,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.036,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5479,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.733,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5492,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.784,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5500,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.688,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5647,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.845,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 2376,
+      "subject": "elementary_mathematics",
+      "matched_fraction": 0.545,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 9466,
+      "subject": "nutrition",
+      "matched_fraction": 0.278,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5662,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.012,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5633,
+      "subject": "high_school_statistics",
+      "matched_fraction": 0.08,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 11322,
+      "subject": "professional_law",
+      "matched_fraction": 0.004,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 13527,
+      "subject": "sociology",
+      "matched_fraction": 0.03,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5654,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.441,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 2726,
+      "subject": "high_school_biology",
+      "matched_fraction": 0.412,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 11648,
+      "subject": "professional_law",
+      "matched_fraction": 0.005,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5742,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.062,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3296,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.179,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 6707,
+      "subject": "logical_fallacies",
+      "matched_fraction": 0.041,
+      "quoted_passage": false,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 6026,
+      "subject": "high_school_world_history",
+      "matched_fraction": 0.029,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 255,
+      "subject": "astronomy",
+      "matched_fraction": 0.03,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": true
+    },
+    {
+      "item": 264,
+      "subject": "astronomy",
+      "matched_fraction": 0.047,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": true
+    },
+    {
+      "item": 298,
+      "subject": "astronomy",
+      "matched_fraction": 0.346,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": true
+    },
+    {
+      "item": 359,
+      "subject": "astronomy",
+      "matched_fraction": 0.125,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": true
+    },
+    {
+      "item": 4543,
+      "subject": "high_school_microeconomics",
+      "matched_fraction": 0.056,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4971,
+      "subject": "high_school_psychology",
+      "matched_fraction": 0.5,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 3318,
+      "subject": "high_school_european_history",
+      "matched_fraction": 0.047,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 5694,
+      "subject": "high_school_us_history",
+      "matched_fraction": 0.33,
+      "quoted_passage": true,
+      "question_in_doc": false,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4778,
+      "subject": "high_school_physics",
+      "matched_fraction": 0.398,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4784,
+      "subject": "high_school_physics",
+      "matched_fraction": 0.529,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4790,
+      "subject": "high_school_physics",
+      "matched_fraction": 0.838,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4836,
+      "subject": "high_school_physics",
+      "matched_fraction": 0.367,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    },
+    {
+      "item": 4849,
+      "subject": "high_school_physics",
+      "matched_fraction": 0.484,
+      "quoted_passage": false,
+      "question_in_doc": true,
+      "answer_in_doc": false
+    }
+  ]
+}
