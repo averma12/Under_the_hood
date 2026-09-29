@@ -1,0 +1,92 @@
+{
+  "format": "uint16 GPT-2 token IDs, EOT after each document",
+  "shards": [
+    {
+      "file": "val_0000.bin",
+      "split": "val",
+      "tokens": 10000000,
+      "docs": 9671,
+      "text_bytes": 46074152
+    },
+    {
+      "file": "train_0001.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 95778,
+      "text_bytes": 461498358
+    },
+    {
+      "file": "train_0002.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 98257,
+      "text_bytes": 462274901
+    },
+    {
+      "file": "train_0003.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 98178,
+      "text_bytes": 461649150
+    },
+    {
+      "file": "train_0004.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 95491,
+      "text_bytes": 460927426
+    },
+    {
+      "file": "train_0005.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 94956,
+      "text_bytes": 460882393
+    },
+    {
+      "file": "train_0006.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 96395,
+      "text_bytes": 461237974
+    },
+    {
+      "file": "train_0007.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 96180,
+      "text_bytes": 460633445
+    },
+    {
+      "file": "train_0008.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 97070,
+      "text_bytes": 462395102
+    },
+    {
+      "file": "train_0009.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 98184,
+      "text_bytes": 462141990
+    },
+    {
+      "file": "train_0010.bin",
+      "split": "train",
+      "tokens": 100000000,
+      "docs": 98239,
+      "text_bytes": 461681202
+    },
+    {
+      "file": "train_0011.bin",
+      "split": "train",
+      "tokens": 90269102,
+      "docs": 88609,
+      "text_bytes": 417211083
+    }
+  ],
+  "source": "HuggingFaceFW/fineweb-edu sample-10BT (streamed, in order)",
+  "total_tokens": 1100269102,
+  "seconds": 396.5
+}

@@ -12,7 +12,8 @@
 > - **Project 5:** [`my_gpt.py`](projects/05_your-gpt-from-a-blank-file/my_gpt.py), a GPT written from a blank file. It comes with tests, Modal A100 training scripts, decoding and context-length experiments, and my [learning notes](projects/05_your-gpt-from-a-blank-file/NOTES.md).
 > - **Project 6:** A100 BPE runs comparing the baseline with nanoGPT-style refinements, including a 10k-step continuation.
 > - **Project 7:** matched comparisons of SwiGLU vs GELU, RMSNorm vs LayerNorm, and RoPE vs learned positions.
-> - **Project 8:** an mHC + flash-attention experiment trained for 30k steps ([write-up](projects/08_flash-attention-and-tiled-kernels/EXPERIMENT_MHC_FLASH.md)).
+> - **Project 8:** an mHC + flash-attention experiment trained for 30k steps ([write-up](projects/08_flash-attention-and-tiled-kernels/EXPERIMENT_MHC_FLASH.md)), [FlashAttention explained from the GPU up](projects/08_flash-attention-and-tiled-kernels/FLASH_ATTENTION_EXPLAINED.md), and KV-cache / Flash-Decoding generation for my GPT.
+> - **Project 9:** real-web pretraining. My GPT (51M params) trained on 1B tokens of FineWeb-Edu with a sharded memmap pipeline, gradient accumulation, validation bits-per-byte, an LR sweep, and a repeated-data BREAK IT ([notes](projects/09_pretraining-on-the-real-web/NOTES.md)).
 >
 > Look for the sections I added to each project's README. They are written as "we trained / we measured" results, with figures. Every result comes from a single seed on small models. Treat them as learning notes, not as benchmarks.
 >

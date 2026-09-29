@@ -1,0 +1,8 @@
+{
+  "step": 572,
+  "max_steps": 572,
+  "done": true,
+  "tokens_seen": 149946368,
+  "lr": 0.001,
+  "val_bpb": 1.3857886639504218
+}
