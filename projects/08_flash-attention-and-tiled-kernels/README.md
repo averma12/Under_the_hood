@@ -47,6 +47,8 @@ The implementation and measurements are in
 |------|------------|
 | [`build.py`](build.py) | `naive_attention` and `tiled_attention`; both causal, both return `(output, peak_intermediate_floats)` |
 | `step_*.py` | The book's code blocks, extracted step-by-step. Reference material. |
+| [`FLASH_ATTENTION_EXPLAINED.md`](FLASH_ATTENTION_EXPLAINED.md) | My deep-dive notes: how attention runs on a GPU, roofline and HBM traffic, streaming softmax derivation, FlashAttention 1/2/3, backward via logsumexp, Flash-Decoding |
+| [`explain_flash_attention.py`](explain_flash_attention.py) | Runnable checks for every numeric claim in the notes (`tests/test_explain_flash_attention.py`) |
 | `tests/test_unit.py` | 10 tests: shape checks, naive peak memory is `2*T²`, tiled matches naive across multiple `(T, d_head, q_block, kv_block)` parametrizations including non-divisible cases, tiled peak < naive peak |
 
 ### How to run
