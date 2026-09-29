@@ -34,6 +34,7 @@ A working ~250-line tiny GPT with weight tying, gradient clipping, AdamW, and au
 | File | What it is |
 |------|------------|
 | [`build.py`](build.py) | Tiny GPT + char tokenizer + batching + train loop + generation + CLI |
+| [`NOTES.md`](NOTES.md) | Our follow-along BPE GPT, CPU/A100 experiments, and Chapter 5 learnings |
 | [`break_it.py`](break_it.py) | Remove residual connections; loss barely budges from random |
 | `step_*.py` | The book's code blocks, extracted step-by-step. Reference material. |
 | `tests/test_unit.py` | 11 unit tests: tokenizer roundtrip, batching shapes + shift invariant, model forward shapes, weight tying, causal mask buffer, generation, training-converges sanity |

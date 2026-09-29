@@ -53,3 +53,7 @@ models/
 *.gguf
 *.bin
 *.safetensors
+
+# Local secrets (never committed)
+.env
+.env.*

@@ -12,6 +12,8 @@ You hear "FlashAttention is 2-3× faster" so often that it's easy to assume ther
 
 **Tiled attention** processes `Q` in chunks of `q_block` rows. For each chunk, it walks over `K` and `V` in chunks of `kv_block` columns, maintaining a running `max` and softmax denominator. At the end of each `Q` chunk, it normalizes and writes back. The full `(T, T)` matrix is never built.
 
+Connection to our [Chapter 7 RoPE experiment](../07_the-details-that-matter/README.md#rope-extension-what-changed-and-what-we-measured): RoPE changes the `Q` and `K` vectors *before* their dot product; FlashAttention changes how the resulting attention calculation is scheduled in memory. They solve different problems and can be combined. This chapter's small CPU reference compares naive and tiled attention without adding RoPE.
+
 The trick is the **online softmax**:
 
 ```
@@ -33,6 +35,11 @@ Long-context LLMs (32k, 100k tokens) are not possible with naive attention becau
 ## What Got Built
 
 A CPU reference implementation of tiled causal attention, side-by-side against naive attention, with explicit peak intermediate-memory accounting.
+
+We also wired PyTorch's actual fused FlashAttention backend into the Chapter 5
+GPT and paired it with four-stream mHC residual routing for a fresh A100 run.
+The implementation and measurements are in
+[`EXPERIMENT_MHC_FLASH.md`](EXPERIMENT_MHC_FLASH.md).
 
 ### Files in this folder
 

@@ -20,6 +20,12 @@ We apply two refinements from category 2:
 
 - **Scaled residual initialization.** In a deep residual stack, each block adds its output to the running hidden state. If each addition is full-scale, the magnitude drifts upward layer by layer. Compensate by initializing the residual-path output projections (attention.proj and the second linear in the MLP) with std reduced by `1/sqrt(2 * n_layers)`. Other linears and embeddings get `std=0.02`.
 
+### Why AdamW?
+
+Adam uses running averages of each parameter's gradient and squared gradient to choose adaptive update sizes. AdamW keeps that adaptive update, but applies **weight decay as a separate shrinkage of the parameter**, rather than mixing the decay term into the gradient that Adam rescales. In shorthand, after computing Adam's loss-driven update, the parameter is also multiplied by `1 - learning_rate × weight_decay`. For example, with learning rate `3e-4` and decay `0.1`, that factor is `0.99997` per update—not a 10% reduction per step. This makes the strength of the shrinkage easier to control independently of Adam's gradient statistics; it can help regularize large weight matrices, but does not guarantee a lower validation loss. See the [PyTorch AdamW documentation](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html) and the [original AdamW paper](https://arxiv.org/abs/1711.05101).
+
+Our Project 5 A100 baseline **already used AdamW**, with PyTorch's default decay of `0.01` on every parameter. Chapter 6 changed *which parameters decay and by how much*: weight matrices get `0.1`, while biases and LayerNorm parameters get `0`. It also changed residual initialization. Therefore our measured validation difference is not an AdamW-versus-Adam test, and it cannot isolate the effect of decay groups from initialization.
+
 ## Why It Matters
 
 After Project 6 you should not admire reference code from a distance. You should steal from it selectively, because you know what each stolen part is protecting.
@@ -77,6 +83,38 @@ Two things to notice:
 ![Train and val loss comparison: prototype vs nanoGPT-style](outputs/loss_comparison.png)
 
 The two train curves are similar (both drop hard). The two val curves are not: the prototype's val starts rising sharply (overfit signature) while the nanoGPT-style val keeps decreasing.
+
+### Our Harry Potter BPE model on A100
+
+We also applied both refinements to the larger, 2048-token BPE model from Project 5. The implementation is in [`my_gpt.py`](../05_your-gpt-from-a-blank-file/my_gpt.py) (`init_scaled_residual_projections` and `configure_decay_groups`), and [`modal_gpt_a100.py`](../05_your-gpt-from-a-blank-file/modal_gpt_a100.py) selects the `chapter6` variant. This run starts with fresh weights because initialization cannot be retroactively applied to an already-trained checkpoint. The tokenizer, train/validation split, model dimensions, 5,000-step learning-rate schedule, evaluation batches, and generation prompts match the earlier A100 run.
+
+| A100 run | Final train loss | Final validation loss |
+|---|---:|---:|
+| Project 5 baseline | 2.1644 | 2.3123 |
+| Chapter 6 refinements | 2.1600 | 2.3055 |
+| Chapter 6, continued to 10,000 steps | 2.0971 | 2.2658 |
+
+The baseline used PyTorch AdamW's default `weight_decay=0.01` on every parameter. The Chapter 6 run uses `0.1` for weight matrices and `0.0` for biases and LayerNorm, plus scaled residual projections. Validation loss improved by 0.0068 nats per BPE token. This is a small gain, unlike the 0.7 gain in the separate tiny character-level exercise above; the two refinements were changed together, so this comparison cannot attribute the gain to either one alone. Generated text still has sentence-level inconsistencies.
+
+![Harry Potter BPE A100 validation loss comparison](figures/harry_potter_bpe_a100_comparison.png)
+
+The 10,000-step result resumes the Chapter 6 checkpoint at step 5,000 using [`modal_gpt_continue.py`](../05_your-gpt-from-a-blank-file/modal_gpt_continue.py). It restores model weights, AdamW moments, and sampling RNG state, then runs 5,000 more updates while cosine-decaying the learning rate from `3e-5` to `1e-5`. The resumed checkpoint reproduced the step-5,000 validation loss exactly. Validation improved another 0.0397 nats per BPE token, although the train/validation gap grew and the fixed-prompt samples still contain broken grammar and scene logic. The next gains in text quality likely need more than simply extending this low-learning-rate run.
+
+![Harry Potter BPE GPT continued from 5,000 to 10,000 steps](figures/harry_potter_bpe_10k_continuation.png)
+
+### What Karpathy's nanochat adds beyond our toy GPT
+
+Our model already has BPE, causal attention, residual blocks, AdamW, a learning-rate schedule, validation, checkpoint/resume, and next-token generation. Karpathy's current [nanochat repository](https://github.com/karpathy/nanochat) extends that into a larger, faster, end-to-end chat-model pipeline:
+
+| Area | Our Harry Potter GPT | Additional nanochat code |
+|---|---|---|
+| Data | Seven books and a small, homemade BPE tokenizer | Pretraining data preparation, tokenization and distributed loading |
+| Architecture | Learned position embeddings, LayerNorm, ordinary multi-head attention, GELU, tied token/output weights | In the current [`gpt.py`](https://github.com/karpathy/nanochat/blob/master/nanochat/gpt.py): rotary positions, RMSNorm, QK normalization, grouped-query attention, faster attention kernels, ReLU-squared MLP, and untied token/output weights |
+| Training and evaluation | One A100, AdamW groups, loss curves and checkpoints | Distributed training, a Muon+AdamW optimizer, throughput measurement, bits-per-byte and task evaluations |
+| Inference | `generate()` recomputes the context for each new token | [`engine.py`](https://github.com/karpathy/nanochat/blob/master/nanochat/engine.py) uses a KV cache to reuse earlier attention work |
+| Chat behavior | Next-token pretraining on books | [`chat_sft.py`](https://github.com/karpathy/nanochat/blob/master/scripts/chat_sft.py) and [`chat_rl.py`](https://github.com/karpathy/nanochat/blob/master/scripts/chat_rl.py) add post-training on conversation and tasks, with a chat CLI |
+
+The key distinction is **base LM versus assistant**. Our Harry Potter model learned to continue text; it was never taught to follow a user's instruction or answer in a chat format. Nanochat includes those later training stages. Architecture and inference improvements can make a model scale or run faster, but simply copying one of them would not turn our small book-trained model into a capable assistant. The [nanochat README](https://github.com/karpathy/nanochat#file-structure) maps the whole pipeline.
 
 ### What the parameter-group split actually catches
 
