@@ -13,6 +13,7 @@
 | [`pretrain.py`](pretrain.py) | Training loop: gradient accumulation, BF16 autocast, FlashAttention, `torch.compile`, validation bpb, tokens/s and MFU logging, time-capped resume |
 | [`modal_pretrain.py`](modal_pretrain.py) | Modal entry points: `prepare`, `smoke`, `sweep`, `train`, `breakit`, `sample` |
 | [`plot_runs.py`](plot_runs.py) | Figures from `metrics.jsonl` |
+| [`PIPELINE_ANNOTATED.md`](PIPELINE_ANNOTATED.md) | The book's Step 2 exercise: every pipeline stage annotated with input, operation, output, and why-here, plus diagrams, how `np.memmap` works, and a comparison with karpathy/autoresearch's `prepare.py` |
 | [`tests/test_pretrain.py`](tests/test_pretrain.py) | Shard round trip and EOT count, loader shift and determinism, byte table and bpb, grad accumulation equals one big batch, resume equals an uninterrupted run, the BREAK IT slice limit |
 
 ## 1. Data: tokenize once, shard, memory-map
@@ -41,6 +42,18 @@
 
 **Throughput.** The run held a steady **~256 K tokens/s**. That is about **29% MFU** (model FLOPs utilization), counting `6 × params + 12 × layers × width × context` FLOPs per token against the A100's 312 TFLOP/s BF16 peak. The rest goes to things like the softmax over a 50 K vocabulary, normalization, the optimizer, and kernel launches. A 51 M model is small enough that these overheads matter.
 
+**Where the parameters are.** Half of the model is the vocabulary:
+
+| Part | Parameters | Share |
+|---|---|---|
+| Token embedding, shared with the output layer (50,304 × 512) | 25.76 M | 51% |
+| 8 blocks × (attention 1.05 M + SwiGLU MLP 2.10 M; MLP 512 → 1,365 → 512) | 25.19 M | 49% |
+| RMSNorm weights | ~5 K | ~0% |
+
+Larger models spend a growing share of their parameters in the blocks. At 125 M (12 layers × 768), the blocks are about two-thirds.
+
+**Where the GPU time went** (from `metrics.jsonl`): 65.1 minutes of training updates, ~3.4 minutes of evaluation (38 evaluations of ~5 s), and ~1 minute of `torch.compile`, at start and after the resume. About **93% of GPU time was training steps**, so data loading was never the bottleneck. The whole run was 3.56 × 10¹⁷ FLOPs; at 100% of the A100's BF16 peak that would take 19 minutes.
+
 ## 3. Bits per byte
 
 Loss per token depends on the tokenizer: a tokenizer with longer tokens makes fewer, harder predictions. **Bits per byte** removes that dependence:
@@ -50,6 +63,20 @@ bpb = Σ (cross-entropy in nats over text targets) / (ln 2 × Σ UTF-8 bytes of 
 ```
 
 We precompute the byte length of all 50,257 tokens once. `<|endoftext|>` targets count as zero bytes, and their loss is left out too, because they are not text. Every evaluation uses the **same fixed windows**: the first 1 M tokens of the validation shard, plus 1 M held-in tokens from the first training shard. That makes points on a curve comparable. Here, `val_loss / val_bpb` ≈ 3.22, close to `ln 2 × 4.62 bytes/token` = 3.20. It is not exact because EOT targets are excluded from bpb, and the validation windows' bytes per token differ slightly from the corpus average.
+
+**Units.** PyTorch's cross-entropy uses the natural log, so loss comes out in **nats**. 1 nat = 1/ln 2 ≈ 1.44 bits, so dividing by ln 2 converts to bits. We use log-probabilities at all because multiplying thousands of per-token probabilities underflows to zero, while their logs simply add up.
+
+**Why per byte.** Suppose one tokenizer writes "the cat" as 1 token with p = 0.01, and another writes it as 2 tokens with p = 0.1 each. Both spend 4.6 nats on the same text, but per token that is 4.6 vs 2.3 nats. Per byte (7 bytes), both are 0.95 bits. The same effect makes our Chapter 9 model's 3.47 nats/token look "worse" than Chapter 6's ~2.27 nats/token with a 2,048-token BPE, even though it is 12× larger. (Different data makes that comparison doubly unfair anyway.)
+
+**What a high bpb means.** bpb scores the probability given to the token that *actually came next*. A prediction is expensive either because the model was uncertain, or because it was confidently wrong. The second is penalized most:
+
+| Model's belief about "The capital of France is ___" | p(Paris) | Cost |
+|---|---|---|
+| Paris 90% | 0.90 | 0.15 bits |
+| Four cities at 25% each | 0.25 | 2 bits |
+| London 95%, Paris 1% | 0.01 | 6.6 bits |
+
+This is why cross-entropy rewards calibrated models. bpb also has a floor above zero: `bpb = the text's own unpredictability + the model's shortfall`, and training can only shrink the second term. Read as compression, 1.079 bpb means the model could encode this text at about 1.08 bits per byte, roughly 7.4× smaller than 8-bit raw text.
 
 ## 4. Learning-rate sweep
 
@@ -122,6 +149,25 @@ This is memorization in the chapter's sense. The model keeps getting better at t
 | Main run, 1 B tokens | 1 × A100 | ~70 min (two resumable chunks) |
 | Samples | 1 × A100 | ~3 min |
 | **Total GPU time** | | **~2.2 A100-hours** |
+
+## What was new compared with Chapters 5–6
+
+| | Chapters 5–6 | Chapter 9 |
+|---|---|---|
+| Data | Seven Harry Potter books, a few million tokens | 1.1 B tokens of FineWeb-Edu, 1.07 M web documents, streamed |
+| Tokenizer | Our BPE, 2,048 tokens | GPT-2, 50,257 (padded to 50,304) |
+| Storage and loading | Token IDs in JSON, loaded whole onto the GPU | Pre-tokenized `uint16` shards, `np.memmap` |
+| Document boundaries | None: one continuous text | `<\|endoftext\|>` after every document |
+| Validation split | Last 10% of the text | A separate shard of documents |
+| Model | ~4 M params, 4 × 256, context 128, dropout 0.1 | 51 M params, 8 × 512, context 1,024, RoPE + RMSNorm + SwiGLU, dropout 0 |
+| Batch per update | 32 × 128 ≈ 4 K tokens | 262 K tokens with gradient accumulation |
+| Optimizer | AdamW defaults, then decay groups (Chapter 6) | Decay groups, β = (0.9, 0.95), fused |
+| Learning rate | Fixed 3e-4 | 4-way sweep; 3e-3 won |
+| Metric | Loss per token | Bits per byte, validation and held-in train |
+| Throughput tracking | None | Tokens/s and MFU |
+| Tests | Model shapes and causality | Grad-accumulation equivalence, resume equivalence, shard round trip, bpb |
+
+Reused from earlier chapters: the `my_gpt.py` model (Chapter 5), decay groups and scaled residual init (Chapter 6), SwiGLU, RMSNorm, and RoPE (Chapter 7), FlashAttention, BF16, and time-capped resumable Modal runs (Chapter 8), and the warmup + cosine schedule (Chapter 5).
 
 ## Caveats
 

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="340" viewBox="0 0 680 340" role="img">
+<title>How np.memmap reads a shard</title>
+<desc>The memmap array covers the whole shard in virtual memory, but only the pages a batch touches (p2 and p8) are read from disk into the RAM page cache and mapped into the array. Untouched pages never leave the disk.</desc>
+<style>
+.th{font:500 14px -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;fill:#2C2C2A}
+.ts{font:400 12px -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;fill:#5F5E5A}
+.cold{fill:#F1EFE8;stroke:#888780;stroke-width:.5}
+.hot{fill:#FAEEDA;stroke:#854F0B;stroke-width:.5}
+.hotlabel{font:500 12px -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;fill:#633806}
+.empty{fill:none;stroke:#B4B2A9;stroke-width:.5;stroke-dasharray:3 3}
+.read{stroke:#BA7517;stroke-width:1.5}
+.map{stroke:#BA7517;stroke-width:1;stroke-dasharray:4 3}
+</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#BA7517" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect width="680" height="340" rx="12" fill="#FFFFFF"/>
+<text class="th" x="40" y="60" dominant-baseline="central">Array view</text>
+<text class="ts" x="40" y="78" dominant-baseline="central">arr[i : i+1025]</text>
+<text class="th" x="40" y="160" dominant-baseline="central">RAM page cache</text>
+<text class="ts" x="40" y="178" dominant-baseline="central">touched pages only</text>
+<text class="th" x="40" y="260" dominant-baseline="central">Shard on disk</text>
+<text class="ts" x="40" y="278" dominant-baseline="central">200 MB file</text>
+<g>
+<rect class="cold" x="200" y="50" width="40" height="36"/><rect class="cold" x="240" y="50" width="40" height="36"/><rect class="hot" x="280" y="50" width="40" height="36"/><rect class="cold" x="320" y="50" width="40" height="36"/><rect class="cold" x="360" y="50" width="40" height="36"/><rect class="cold" x="400" y="50" width="40" height="36"/><rect class="cold" x="440" y="50" width="40" height="36"/><rect class="cold" x="480" y="50" width="40" height="36"/><rect class="hot" x="520" y="50" width="40" height="36"/><rect class="cold" x="560" y="50" width="40" height="36"/><rect class="cold" x="600" y="50" width="40" height="36"/>
+<text class="ts" x="220" y="68" text-anchor="middle" dominant-baseline="central">p0</text><text class="ts" x="260" y="68" text-anchor="middle" dominant-baseline="central">p1</text><text class="hotlabel" x="300" y="68" text-anchor="middle" dominant-baseline="central">p2</text><text class="ts" x="340" y="68" text-anchor="middle" dominant-baseline="central">p3</text><text class="ts" x="380" y="68" text-anchor="middle" dominant-baseline="central">p4</text><text class="ts" x="420" y="68" text-anchor="middle" dominant-baseline="central">p5</text><text class="ts" x="460" y="68" text-anchor="middle" dominant-baseline="central">p6</text><text class="ts" x="500" y="68" text-anchor="middle" dominant-baseline="central">p7</text><text class="hotlabel" x="540" y="68" text-anchor="middle" dominant-baseline="central">p8</text><text class="ts" x="580" y="68" text-anchor="middle" dominant-baseline="central">p9</text><text class="ts" x="620" y="68" text-anchor="middle" dominant-baseline="central">…</text>
+</g>
+<g>
+<rect class="hot" x="340" y="150" width="40" height="36"/><rect class="hot" x="380" y="150" width="40" height="36"/><rect class="empty" x="420" y="150" width="40" height="36"/><rect class="empty" x="460" y="150" width="40" height="36"/>
+<text class="hotlabel" x="360" y="168" text-anchor="middle" dominant-baseline="central">p2</text><text class="hotlabel" x="400" y="168" text-anchor="middle" dominant-baseline="central">p8</text>
+</g>
+<g>
+<rect class="cold" x="200" y="250" width="40" height="36"/><rect class="cold" x="240" y="250" width="40" height="36"/><rect class="hot" x="280" y="250" width="40" height="36"/><rect class="cold" x="320" y="250" width="40" height="36"/><rect class="cold" x="360" y="250" width="40" height="36"/><rect class="cold" x="400" y="250" width="40" height="36"/><rect class="cold" x="440" y="250" width="40" height="36"/><rect class="cold" x="480" y="250" width="40" height="36"/><rect class="hot" x="520" y="250" width="40" height="36"/><rect class="cold" x="560" y="250" width="40" height="36"/><rect class="cold" x="600" y="250" width="40" height="36"/>
+<text class="ts" x="220" y="268" text-anchor="middle" dominant-baseline="central">p0</text><text class="ts" x="260" y="268" text-anchor="middle" dominant-baseline="central">p1</text><text class="hotlabel" x="300" y="268" text-anchor="middle" dominant-baseline="central">p2</text><text class="ts" x="340" y="268" text-anchor="middle" dominant-baseline="central">p3</text><text class="ts" x="380" y="268" text-anchor="middle" dominant-baseline="central">p4</text><text class="ts" x="420" y="268" text-anchor="middle" dominant-baseline="central">p5</text><text class="ts" x="460" y="268" text-anchor="middle" dominant-baseline="central">p6</text><text class="ts" x="500" y="268" text-anchor="middle" dominant-baseline="central">p7</text><text class="hotlabel" x="540" y="268" text-anchor="middle" dominant-baseline="central">p8</text><text class="ts" x="580" y="268" text-anchor="middle" dominant-baseline="central">p9</text><text class="ts" x="620" y="268" text-anchor="middle" dominant-baseline="central">…</text>
+</g>
+<line class="read" x1="302" y1="248" x2="356" y2="190" marker-end="url(#arrow)"/>
+<line class="read" x1="538" y1="248" x2="404" y2="190" marker-end="url(#arrow)"/>
+<line class="map" x1="356" y1="148" x2="304" y2="90" marker-end="url(#arrow)"/>
+<line class="map" x1="404" y1="148" x2="536" y2="90" marker-end="url(#arrow)"/>
+<text class="ts" x="340" y="320" text-anchor="middle" dominant-baseline="central">Amber = pages a batch touched (read on first touch). Gray pages never leave the disk.</text>
+</svg>
