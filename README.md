@@ -1,5 +1,23 @@
 # Under the Hood
 
+> **📝 About this copy — Abhinav Verma's study repo**
+>
+> This is my personal working copy of [mechramc/Under-the-hood](https://github.com/mechramc/Under-the-hood), the code companion to Ramchand Kumaresan's book *Under the Hood*. I am working through the book project by project. This repo records how I understood it, what I built myself, and what I learned.
+>
+> All credit for the book, the project structure, and the reference code (`build.py`, `break_it.py`, per-step files) goes to the original author. My additions are my own interpretation and experiments. They are not part of the official companion, and any mistakes in them are mine.
+>
+> **What I added so far:**
+> - **Project 5:** [`my_gpt.py`](projects/05_your-gpt-from-a-blank-file/my_gpt.py), a GPT written from a blank file. It comes with tests, Modal A100 training scripts, decoding and context-length experiments, and my [learning notes](projects/05_your-gpt-from-a-blank-file/NOTES.md).
+> - **Project 6:** A100 BPE runs comparing the baseline with nanoGPT-style refinements, including a 10k-step continuation.
+> - **Project 7:** matched comparisons of SwiGLU vs GELU, RMSNorm vs LayerNorm, and RoPE vs learned positions.
+> - **Project 8:** an mHC + flash-attention experiment trained for 30k steps ([write-up](projects/08_flash-attention-and-tiled-kernels/EXPERIMENT_MHC_FLASH.md)).
+>
+> Look for the sections I added to each project's README. They are written as "we trained / we measured" results, with figures. Every result comes from a single seed on small models. Treat them as learning notes, not as benchmarks.
+>
+> Want the real thing? **[Buy the book](https://leanpub.com/under-the-hood)** and use the [original repo](https://github.com/mechramc/Under-the-hood).
+
+---
+
 ### Build Every Layer of a Large Language Model from Scratch
 
 > *A practical manual for understanding how modern language models are built, where they fail, and how to reason about their behavior like an engineer instead of a spectator.*
