@@ -87,7 +87,18 @@ python projects/09_pretraining-on-the-real-web/break_it.py
 
 ## Outputs
 
-_To be captured in PR 3. Will include loss curves, sample generations, and any benchmark results._
+**Our run:** we built this chapter's pipeline around our own Chapter 5 GPT and trained a 51 M-parameter model on 1 B tokens of FineWeb-Edu on one A100. It covers pre-tokenized `uint16` shards, memory-mapped loading, EOT document boundaries, gradient accumulation, BF16 with FlashAttention, validation bits-per-byte, a 4-way LR sweep, and a repeated-data BREAK IT. Results, figures, and learnings are in [`NOTES.md`](NOTES.md).
+
+```bash
+# CPU smoke test on any local text file
+.venv/bin/python projects/09_pretraining-on-the-real-web/prepare_fineweb.py --source text \
+    --text-files book.txt --out-dir /tmp/shards --shard-tokens 400000 --val-tokens 100000
+.venv/bin/python projects/09_pretraining-on-the-real-web/pretrain.py --data-dir /tmp/shards \
+    --out-dir /tmp/run --preset tiny --total-tokens 409600 --batch-tokens 4096 --micro-batch 16
+
+# A100 on Modal: prepare | smoke | sweep | train | breakit | sample
+modal run projects/09_pretraining-on-the-real-web/modal_pretrain.py --mode sweep
+```
 
 ## Read in the book
 
