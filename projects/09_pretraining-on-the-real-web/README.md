@@ -87,7 +87,7 @@ python projects/09_pretraining-on-the-real-web/break_it.py
 
 ## Outputs
 
-**Our run:** we built this chapter's pipeline around our own Chapter 5 GPT and trained a 51 M-parameter model on 1 B tokens of FineWeb-Edu on one A100. It covers pre-tokenized `uint16` shards, memory-mapped loading, EOT document boundaries, gradient accumulation, BF16 with FlashAttention, validation bits-per-byte, a 4-way LR sweep, and a repeated-data BREAK IT. Results, figures, and learnings are in [`NOTES.md`](NOTES.md).
+**Our run:** we built this chapter's pipeline around our own Chapter 5 GPT and trained a 51 M-parameter model on 1 B tokens of FineWeb-Edu on one A100. It covers pre-tokenized `uint16` shards, memory-mapped loading, EOT document boundaries, gradient accumulation, BF16 with FlashAttention, validation bits-per-byte, a 4-way LR sweep, and a repeated-data BREAK IT. Results, figures, and learnings are in [`NOTES.md`](NOTES.md). The book's Step 2 exercise (annotate the data pipeline like a systems engineer), with diagrams and a walkthrough of `np.memmap`, is in [`PIPELINE_ANNOTATED.md`](PIPELINE_ANNOTATED.md).
 
 ```bash
 # CPU smoke test on any local text file
