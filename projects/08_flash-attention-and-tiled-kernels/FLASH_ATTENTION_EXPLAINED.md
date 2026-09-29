@@ -479,6 +479,8 @@ There is also a parallelism problem. With one query per head and a small batch, 
 - My [mHC + Flash experiment](EXPERIMENT_MHC_FLASH.md) calls the real fused kernel through `torch.nn.functional.scaled_dot_product_attention` with only the Flash backend allowed. The profiler confirmed `pytorch_flash::flash_fwd_kernel` ran on the A100. At context 128, the `N × N` matrix is tiny (128×128), so that run verifies the fused path works. **It is not a long-context speed or memory test.** Per [section 5.3](#53-how-much-hbm-traffic-does-this-save), Flash's advantage grows with `N`.
 - My [RoPE experiment](../07_the-details-that-matter/README.md) changes `Q` and `K` *before* the dot product. FlashAttention changes how that dot product is scheduled. They are independent and compose. Real kernels often fuse RoPE into the Q/K load.
 
+- My GPT's `generate()` now uses a KV cache, with an optional split-KV (Flash-Decoding) decode step that merges `(m, l, o)` partials exactly as in [section 4.5](#45-softmax-states-can-be-merged-in-any-order). The design, tests, and CPU timings are in [Chapter 5 notes](../05_your-gpt-from-a-blank-file/NOTES.md#faster-generation-kv-cache-and-split-kv-decoding).
+
 **Natural next steps:**
 
 1. Benchmark SDPA's `math` vs `flash` backends on an A100 for `N ∈ {512, 2k, 8k, 32k}`. Measure time and `torch.cuda.max_memory_allocated()`, and see where the curves split.

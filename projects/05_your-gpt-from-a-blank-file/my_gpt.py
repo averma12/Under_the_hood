@@ -221,6 +221,60 @@ def apply_rope(x, cos, sin):
     return x * cos + rotated * sin
 
 
+def split_kv_decode_attention(q, k, v, num_splits):
+    """Flash-Decoding: one new query over the KV cache, split into chunks.
+
+    Each chunk yields a partial softmax state: max m, sum l, unnormalized o.
+    On a GPU each chunk can run on a different SM. Merging rescales every
+    partial to the global max, so the result equals ordinary attention.
+    q: [B, heads, 1, D]; k, v: [B, heads, L, D].
+    """
+    B, H, L, D = k.shape
+    chunk = math.ceil(L / min(num_splits, L))
+    splits = math.ceil(L / chunk)  # no chunk is empty, so no chunk max is -inf
+    pad = splits * chunk - L
+    k = F.pad(k, (0, 0, 0, pad)).view(B, H, splits, chunk, D).float()
+    v = F.pad(v, (0, 0, 0, pad)).view(B, H, splits, chunk, D).float()
+    scores = (q.float().unsqueeze(2) @ k.transpose(-2, -1)).squeeze(-2) * D ** -0.5
+    padded = torch.arange(splits * chunk, device=q.device).view(splits, chunk) >= L
+    scores = scores.masked_fill(padded, float("-inf"))  # [B, H, splits, chunk]
+    m = scores.amax(dim=-1)
+    p = torch.exp(scores - m[..., None])
+    l = p.sum(dim=-1)
+    o = (p.unsqueeze(-2) @ v).squeeze(-2)  # [B, H, splits, D]
+    scale = torch.exp(m - m.amax(dim=-1, keepdim=True))  # alpha for each split
+    out = (o * scale[..., None]).sum(dim=-2) / (l * scale).sum(dim=-1, keepdim=True)
+    return out.unsqueeze(-2).to(q.dtype)
+
+
+class KVCache:
+    """Keys and values of every layer for the tokens already processed.
+
+    generate() fills it from the prompt once (prefill), then runs one new
+    token per step (decode): attention for one query, not the whole context.
+    """
+
+    def __init__(self, cfg, decode_splits=1):
+        if decode_splits < 1:
+            raise ValueError("decode_splits must be positive.")
+        self.block_size = cfg.block_size
+        self.decode_splits = decode_splits
+        self.keys = [None] * cfg.n_layers
+        self.values = [None] * cfg.n_layers
+        self.length = 0  # GPT.forward advances this after all layers run
+
+    def append(self, layer, k, v):
+        """Store k, v at positions [length, length + T) and return all cached k, v."""
+        if self.keys[layer] is None:
+            # Allocated on first use so device and dtype (e.g. BF16 autocast) match.
+            shape = (*k.shape[:2], self.block_size, k.shape[-1])
+            self.keys[layer], self.values[layer] = k.new_zeros(shape), v.new_zeros(shape)
+        end = self.length + k.shape[2]
+        self.keys[layer][:, :, self.length:end] = k
+        self.values[layer][:, :, self.length:end] = v
+        return self.keys[layer][:, :, :end], self.values[layer][:, :, :end]
+
+
 class MultiHeadAttention(nn.Module):
     def __init__(self, cfg):
         super().__init__()
@@ -249,39 +303,53 @@ class MultiHeadAttention(nn.Module):
             torch.tril(torch.ones(cfg.block_size, cfg.block_size, dtype=torch.bool)),
         )
 
-    def forward(self, x):
+    def forward(self, x, kv_cache=None):
         B, T, C = x.shape
+        start = 0 if kv_cache is None else kv_cache.length
         q, k, v = self.qkv(x).chunk(3, dim=-1)
         # [B, T, C] -> [B, heads, T, head_dim]
         q = q.reshape(B, T, self.n_heads, self.head_dim).transpose(1, 2)
         k = k.reshape(B, T, self.n_heads, self.head_dim).transpose(1, 2)
         v = v.reshape(B, T, self.n_heads, self.head_dim).transpose(1, 2)
         if self.position_encoding == "rope":
-            cos = self.rope_cos[:, :, :T].to(dtype=q.dtype)
-            sin = self.rope_sin[:, :, :T].to(dtype=q.dtype)
+            cos = self.rope_cos[:, :, start:start + T].to(dtype=q.dtype)
+            sin = self.rope_sin[:, :, start:start + T].to(dtype=q.dtype)
             q = apply_rope(q, cos, sin)
             k = apply_rope(k, cos, sin)
-        if self.attention_impl == "manual":
+        if kv_cache is not None:
+            k, v = kv_cache.append(self.layer_idx, k, v)
+        if start > 0:
+            # Decode: one new query sees every cached key, so no causal mask.
+            if kv_cache.decode_splits > 1:
+                out = split_kv_decode_attention(q, k, v, kv_cache.decode_splits)
+            elif self.attention_impl == "manual":
+                weights = F.softmax((q @ k.transpose(-2, -1)) * self.head_dim ** -0.5, dim=-1)
+                out = weights @ v
+            else:
+                out = self._sdpa(q, k, v, is_causal=False)
+        elif self.attention_impl == "manual":
             scores = (q @ k.transpose(-2, -1)) * self.head_dim ** -0.5
             # Position t can see positions 0..t, never future tokens.
             scores = scores.masked_fill(~self.causal_mask[:T, :T], float("-inf"))
             weights = self.attn_dropout(F.softmax(scores, dim=-1))
             out = weights @ v
-        elif self.attention_impl == "flash":
+        else:
+            out = self._sdpa(q, k, v, is_causal=True)
+        out = out.transpose(1, 2).contiguous().reshape(B, T, C)
+        return self.output_dropout(self.proj(out))
+
+    def _sdpa(self, q, k, v, is_causal):
+        dropout_p = self.dropout_p if self.training else 0.0
+        if self.attention_impl == "flash":
             from torch.nn.attention import SDPBackend, sdpa_kernel
             # Fail loudly if this shape/dtype/GPU cannot run the fused kernel.
             with sdpa_kernel(backends=[SDPBackend.FLASH_ATTENTION]):
-                out = F.scaled_dot_product_attention(
-                    q, k, v, is_causal=True,
-                    dropout_p=self.dropout_p if self.training else 0.0,
+                return F.scaled_dot_product_attention(
+                    q, k, v, is_causal=is_causal, dropout_p=dropout_p,
                 )
-        else:
-            out = F.scaled_dot_product_attention(
-                q, k, v, is_causal=True,
-                dropout_p=self.dropout_p if self.training else 0.0,
-            )
-        out = out.transpose(1, 2).contiguous().reshape(B, T, C)
-        return self.output_dropout(self.proj(out))
+        return F.scaled_dot_product_attention(
+            q, k, v, is_causal=is_causal, dropout_p=dropout_p,
+        )
 
 
 # 7. Feed-forward network and pre-norm transformer block
@@ -377,7 +445,7 @@ class MHCRoute(nn.Module):
         self.record_stats = False
         self.last_stats = None
 
-    def forward(self, streams):
+    def forward(self, streams, **layer_kwargs):
         b, t, n, c = streams.shape
         flat = streams.reshape(b, t, n * c)
         coefficients = self.routing_proj(self.routing_norm(flat)) * self.routing_alpha
@@ -417,7 +485,7 @@ class MHCRoute(nn.Module):
                     "col_error": (mixing.float().sum(-2) - 1).abs().max().item(),
                 }
         selected = torch.einsum("...n,...nc->...c", pre, streams)
-        updated = self.layer(self.norm(selected))
+        updated = self.layer(self.norm(selected), **layer_kwargs)
         skip = torch.einsum("...ij,...jc->...ic", mixing, streams)
         return skip + post[..., :, None] * updated[..., None, :]
 
@@ -436,10 +504,10 @@ class TransformerBlock(nn.Module):
             # These modules now belong to the routes; avoid duplicate names.
             del self.ln1, self.attn, self.ln2, self.ffn
 
-    def forward(self, x):
+    def forward(self, x, kv_cache=None):
         if self.mhc:
-            return self.ffn_route(self.attn_route(x))
-        x = x + self.attn(self.ln1(x))
+            return self.ffn_route(self.attn_route(x, kv_cache=kv_cache))
+        x = x + self.attn(self.ln1(x), kv_cache=kv_cache)
         x = x + self.ffn(self.ln2(x))
         return x
 
@@ -457,6 +525,9 @@ class GPT(nn.Module):
             if cfg.position_encoding == "learned" else None
         )
         self.blocks = nn.ModuleList([TransformerBlock(cfg) for _ in range(cfg.n_layers)])
+        attentions = [m for m in self.blocks.modules() if isinstance(m, MultiHeadAttention)]
+        for i, attention in enumerate(attentions):
+            attention.layer_idx = i  # which KVCache slot this layer writes
         self.final_norm = make_norm(cfg)
         self.lm_head = nn.Linear(cfg.d_model, cfg.vocab_size, bias=False)
         self.apply(self._init_weights)
@@ -475,18 +546,25 @@ class GPT(nn.Module):
         elif isinstance(module, nn.RMSNorm):
             nn.init.ones_(module.weight)
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None, kv_cache=None):
         if idx.ndim != 2 or not 1 <= idx.shape[1] <= self.cfg.block_size:
             raise ValueError("idx must have shape [B, T] with 1 <= T <= block_size.")
+        start = 0 if kv_cache is None else kv_cache.length
+        if start and idx.shape[1] != 1:
+            raise ValueError("After the prompt, feed the KV cache one token at a time.")
+        if start + idx.shape[1] > self.cfg.block_size:
+            raise ValueError("KV cache is full; start a new cache for the cropped window.")
         x = self.token_embedding(idx)
         if self.position_embedding is not None:
-            positions = torch.arange(idx.shape[1], device=idx.device)
+            positions = torch.arange(start, start + idx.shape[1], device=idx.device)
             # [B, T, C] + [T, C]; position embeddings broadcast across the batch.
             x = x + self.position_embedding(positions)
         if self.cfg.mhc_streams > 1:
             x = x.unsqueeze(-2).expand(-1, -1, self.cfg.mhc_streams, -1)
         for block in self.blocks:
-            x = block(x)
+            x = block(x, kv_cache=kv_cache)
+        if kv_cache is not None:
+            kv_cache.length += idx.shape[1]
         if self.cfg.mhc_streams > 1:
             x = x.sum(dim=-2)
         logits = self.lm_head(self.final_norm(x))  # [B, T, vocab_size]
@@ -500,8 +578,14 @@ class GPT(nn.Module):
         return logits, loss
 
     @torch.no_grad()
-    def generate(self, idx, max_new_tokens, temperature=1.0):
-        """Sample one next token at a time, keeping only the latest context window."""
+    def generate(self, idx, max_new_tokens, temperature=1.0, use_kv_cache=True,
+                 decode_splits=1):
+        """Sample one next token at a time, keeping only the latest context window.
+
+        With use_kv_cache, the prompt runs once and each later step feeds only
+        the newest token. decode_splits > 1 uses split-KV (Flash-Decoding)
+        attention for those steps. Both give the same logits as recomputing.
+        """
         if idx.ndim != 2 or idx.shape[0] == 0 or idx.shape[1] == 0:
             raise ValueError("Provide a nonempty [B, T] prompt.")
         if max_new_tokens < 0 or not math.isfinite(temperature) or temperature <= 0:
@@ -509,8 +593,18 @@ class GPT(nn.Module):
         was_training = self.training
         self.eval()  # Disable dropout while generating.
         try:
+            cache = None
             for _ in range(max_new_tokens):
-                logits, _ = self(idx[:, -self.cfg.block_size:])
+                if not use_kv_cache:
+                    logits, _ = self(idx[:, -self.cfg.block_size:])
+                elif (cache is not None and cache.length == idx.shape[1] - 1
+                      and cache.length < self.cfg.block_size):
+                    logits, _ = self(idx[:, -1:], kv_cache=cache)
+                else:
+                    # Prefill. Once the window slides, positions restart at 0
+                    # for the cropped window, so cached keys are stale: rebuild.
+                    cache = KVCache(self.cfg, decode_splits)
+                    logits, _ = self(idx[:, -self.cfg.block_size:], kv_cache=cache)
                 probs = F.softmax(logits[:, -1, :] / temperature, dim=-1)
                 next_id = torch.multinomial(probs, num_samples=1)
                 idx = torch.cat((idx, next_id), dim=1)

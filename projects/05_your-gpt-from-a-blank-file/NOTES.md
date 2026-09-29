@@ -50,6 +50,25 @@ We used the *same* A100 checkpoint, three prompts, and fixed sampling seeds in [
 
 The [full experiment results](outputs/my_gpt_2048/modal_runs/gpt-2048-20260922-185701/decoding_and_context_experiments.json) include every generated continuation and the context-loss estimates.
 
+## Faster generation: KV cache and split-KV decoding
+
+Originally, `generate()` reran the whole context through the model for every new token. That means token 100 recomputed attention for the first 99 tokens again. `my_gpt.py` now keeps a **KV cache**. The prompt runs once (**prefill**). After that, each step feeds only the newest token (**decode**): one query attends to the cached keys and values of every layer. The motivation and the GPU view are in the [Chapter 8 FlashAttention notes](../08_flash-attention-and-tiled-kernels/FLASH_ATTENTION_EXPLAINED.md#8-inference-decoding-and-flash-decoding).
+
+- `model.generate(prompt, n)` uses the cache by default. `use_kv_cache=False` restores the old recompute path.
+- `decode_splits=k` computes each decode step with **split-KV attention** (the Flash-Decoding algorithm). The cache is cut into `k` chunks. Each chunk produces a partial softmax state (max, sum, unnormalized output). The chunks are then merged with the same rescaling rule as FlashAttention's streaming softmax. On a GPU, the chunks could run on different SMs. Here it is a PyTorch reference of the algorithm, not a custom kernel.
+- Prefill still uses the configured attention path. With `attention_impl="flash"` on a GPU, that is the fused FlashAttention kernel. The mHC routes and RoPE positions both work with the cache.
+- Once the context passes `block_size`, the window slides, and positions restart at 0 for the cropped window, exactly as in the original loop. Cached keys are then stale, so each step re-prefills. This keeps outputs identical to the old path, but the speedup shrinks beyond the window.
+
+[`benchmark_kv_cache.py`](benchmark_kv_cache.py) measured this on CPU (Apple M4 Pro, FP32, one prompt of 11 tokens, single run):
+
+| Checkpoint | New tokens | Recompute | KV cache | KV + split-KV ×4 | Same tokens |
+|---|---|---|---|---|---|
+| mHC + Flash 30k (`best.pt`, run with SDPA on CPU) | 100 | 0.94 s | 0.28 s (**3.3×**) | 0.27 s | yes |
+| Chapter 7 RMSNorm + SwiGLU | 117 (fills the 128 window) | 0.38 s | 0.08 s (**4.9×**) | 0.08 s | yes |
+| Chapter 7 RMSNorm + SwiGLU | 250 (window slides) | 1.02 s | 0.72 s (1.4×) | 0.73 s | yes |
+
+Cached logits match a full forward pass to about `1e-5` (FP32). With the same seed, all three modes sampled identical tokens. Split-KV adds no speed on CPU. Its GPU benefit appears when batch × heads is smaller than the number of SMs, which this benchmark does not measure. These are single wall-clock runs on one machine, not a careful latency study. [`tests/test_my_gpt_kv_cache.py`](tests/test_my_gpt_kv_cache.py) checks cached logits against full recompute for learned/RoPE positions, manual/SDPA attention, and mHC, with and without split-KV.
+
 ## Takeaways for Chapter 6
 
 - A lower loss and a plausible dialogue format do not guarantee coherent paragraphs. Check both held-out loss and fixed-prompt generations.
