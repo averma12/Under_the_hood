@@ -4,6 +4,8 @@
 >
 > This is my personal working copy of [mechramc/Under-the-hood](https://github.com/mechramc/Under-the-hood), the code companion to Ramchand Kumaresan's book *Under the Hood*. I am working through the book project by project. This repo records how I understood it, what I built myself, and what I learned.
 >
+> 📖 **If this repo helps you, please support the author and buy the book: [leanpub.com/under-the-hood](https://leanpub.com/under-the-hood).** Reading the book alongside the code is how I learned all of this. My notes here don't replace it.
+>
 > All credit for the book, the project structure, and the reference code (`build.py`, `break_it.py`, per-step files) goes to the original author. My additions are my own interpretation and experiments. They are not part of the official companion, and any mistakes in them are mine.
 >
 > **What I added so far:**
@@ -14,7 +16,7 @@
 >
 > Look for the sections I added to each project's README. They are written as "we trained / we measured" results, with figures. Every result comes from a single seed on small models. Treat them as learning notes, not as benchmarks.
 >
-> Want the real thing? **[Buy the book](https://leanpub.com/under-the-hood)** and use the [original repo](https://github.com/mechramc/Under-the-hood).
+> Want the real thing? **[Get the book on Leanpub](https://leanpub.com/under-the-hood)** and use the [original repo](https://github.com/mechramc/Under-the-hood).
 
 ---
 
