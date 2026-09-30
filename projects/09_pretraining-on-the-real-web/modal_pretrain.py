@@ -125,7 +125,8 @@ def run_to_completion(run_id, extra_args, max_seconds, max_calls=20):
 
 @app.local_entrypoint()
 def main(mode: str = "smoke", tokens: int = 0, lr: float = 1e-3, run_id: str = "",
-         max_seconds: int = 3000, lrs: str = "3e-4,1e-3,3e-3,6e-3", warmup_steps: int = 0):
+         max_seconds: int = 3000, lrs: str = "3e-4,1e-3,3e-3,6e-3", warmup_steps: int = 0,
+         data_dir: str = "", eval_interval: int = 100):
     if mode == "prepare":
         print(json.dumps(prepare_data.remote(tokens or 1_100_000_000, 100_000_000,
                                              10_000_000), indent=2))
@@ -155,8 +156,10 @@ def main(mode: str = "smoke", tokens: int = 0, lr: float = 1e-3, run_id: str = "
         print(sample.remote(run_id or f"main-lr{lr}"))
     elif mode == "train":
         tokens = tokens or 1_000_000_000
+        # --data-dir given here overrides COMMON's (argparse keeps the last value).
         run_to_completion(run_id or f"main-lr{lr}", [
             "--lr", str(lr), "--total-tokens", str(tokens),
-            "--warmup-steps", str(warmup_steps or 200), "--eval-interval", "100"], max_seconds)
+            "--warmup-steps", str(warmup_steps or 200), "--eval-interval", str(eval_interval),
+            *(["--data-dir", data_dir] if data_dir else [])], max_seconds)
     else:
         raise ValueError("mode must be prepare, smoke, sweep, breakit, sample, or train")

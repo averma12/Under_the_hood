@@ -1,0 +1,56 @@
+{
+  "documents": 1067008,
+  "validation_docs": 9671,
+  "training_docs": 1057337,
+  "quality": {
+    "flagged_training_docs": 2409,
+    "by_flag": {
+      "too_short": 446,
+      "too_long": 0,
+      "odd_word_length": 73,
+      "repetitive": 95,
+      "non_english_chars": 36,
+      "symbol_heavy": 1,
+      "mostly_bullets": 1730,
+      "few_real_words": 47
+    }
+  },
+  "dedup": {
+    "exact_duplicate_docs": 3925,
+    "near_duplicate_docs": 5890,
+    "clusters_with_copies": 5858,
+    "largest_cluster": 4,
+    "training_docs_near_duplicating_validation": 147
+  },
+  "val_contamination": {
+    "validation_13grams": 7432301,
+    "validation_13grams_seen_in_training": 0.03863137405226188,
+    "training_docs_sharing_any_13gram": 37165,
+    "training_docs_sharing_50plus_13grams": 6725,
+    "validation_docs_leak_ge_50pct": 258,
+    "validation_docs_leak_ge_80pct": 177,
+    "mean_validation_leak": 0.04359649909255694
+  },
+  "benchmarks": {
+    "mmlu": {
+      "items": 14042,
+      "checkable_items": 13805,
+      "items_found_in_training": 146,
+      "training_docs_with_hits": 641
+    },
+    "arc-challenge": {
+      "items": 1172,
+      "checkable_items": 1156,
+      "items_found_in_training": 1,
+      "training_docs_with_hits": 1
+    },
+    "arc-easy": {
+      "items": 2376,
+      "checkable_items": 2299,
+      "items_found_in_training": 4,
+      "training_docs_with_hits": 7
+    }
+  },
+  "curated_training_docs": 1041959,
+  "seconds": 439
+}

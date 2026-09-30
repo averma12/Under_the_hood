@@ -61,7 +61,12 @@ python projects/10_data-curation-and-contamination/break_it.py
 
 ## Outputs
 
-_To be captured in PR 3. Will include loss curves, sample generations, and any benchmark results._
+**Our run:** we audited the exact 1.07 M-document FineWeb-Edu corpus our Chapter 9 model trained on, in 4.5 minutes on 16 CPUs. The audit covers quality heuristics, MinHash + LSH deduplication, 13-gram contamination against our validation split and against MMLU/ARC, and the mixing schedule. We then retrained on a decontaminated corpus to measure how much the leaked validation text actually inflated our numbers. Results and learnings are in [`NOTES.md`](NOTES.md).
+
+```bash
+modal run projects/10_data-curation-and-contamination/modal_curate.py --mode audit
+.venv/bin/python projects/10_data-curation-and-contamination/analyze.py val
+```
 
 ## Read in the book
 
